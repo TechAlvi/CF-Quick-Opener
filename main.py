@@ -1,111 +1,261 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, simpledialog, messagebox
 import webbrowser
 import re
+import json
+import os
 
-class CFOpenApp:
+
+# ===============================
+# Config
+# ===============================
+
+JSON_FILE = "UserNames.json"
+
+
+# ===============================
+# Launcher Class
+# ===============================
+
+class CPLauncher:
+
     def __init__(self, root):
         self.root = root
-        self.root.title("CF Quick Open")
-        self.root.geometry("420x220")
-        self.root.resizable(False, False)
-        self.root.configure(bg="#1e1e2e")
 
-        # Style
+        self.root.title("CP Launcher")
+        self.root.geometry("500x280")
+        self.root.configure(bg="#181825")
+        self.root.resizable(False, False)
+
+        self.setup_style()
+        self.create_ui()
+
+        self.json_file = JSON_FILE
+        self.ensure_json_exists()
+
+    # ===============================
+    # JSON System
+    # ===============================
+
+    def ensure_json_exists(self):
+        if not os.path.exists(self.json_file):
+            data = {
+                "CF": "",
+                "LOJ": "",
+                "LC": "",
+                "CC": "",
+                "AT": "",
+                "HR": "",
+                "CSES": ""
+            }
+
+            with open(self.json_file, "w") as f:
+                json.dump(data, f, indent=4)
+
+    def load_accounts(self):
+        with open(self.json_file) as f:
+            return json.load(f)
+
+    def save_accounts(self, data):
+        with open(self.json_file, "w") as f:
+            json.dump(data, f, indent=4)
+
+    # ===============================
+    # Style (Ultra Clean Theme)
+    # ===============================
+
+    def setup_style(self):
         style = ttk.Style()
         style.theme_use("clam")
 
-        style.configure("TLabel", background="#1e1e2e", foreground="#cdd6f4", font=("Segoe UI", 11))
-        style.configure("TButton", font=("Segoe UI", 10, "bold"), padding=8)
-        style.map("TButton",
-                  background=[("active", "#89b4fa"), ("!active", "#45475a")],
-                  foreground=[("active", "#1e1e2e"), ("!active", "#cdd6f4")])
+        style.configure("TFrame", background="#181825")
 
-        style.configure("TEntry", fieldbackground="#2e2e44", foreground="#cdd6f4",
-                        insertcolor="#f38ba8", font=("Consolas", 12))
+        style.configure("TLabel",
+                        background="#181825",
+                        foreground="#cdd6f4",
+                        font=("Segoe UI", 11))
 
-        # Title
-        ttk.Label(root, text="Codeforces Problem Opener", font=("Segoe UI", 14, "bold"),
-                  foreground="#89b4fa").pack(pady=(20, 10))
+        style.configure("TEntry",
+                        fieldbackground="#1e1e2e",
+                        foreground="#cdd6f4",
+                        insertcolor="#89b4fa")
 
-        # Input field + label
-        frame = ttk.Frame(root)
-        frame.pack(pady=10, padx=30, fill="x")
+        style.configure("TButton",
+                        font=("Segoe UI", 10, "bold"),
+                        padding=6)
 
-        ttk.Label(frame, text="CF").pack(side="left", padx=(0, 8))
-        self.entry = ttk.Entry(frame, width=18, justify="center")
-        self.entry.pack(side="left", fill="x", expand=True)
-        self.entry.focus_set()
+    # ===============================
+    # UI
+    # ===============================
 
-        # Placeholder behavior
-        self.placeholder = "  1985F  or  1913 A"
-        self.entry.insert(0, self.placeholder)
-        self.entry.bind("<FocusIn>", self.clear_placeholder)
-        self.entry.bind("<FocusOut>", self.restore_placeholder)
-        self.entry.bind("<Return>", lambda e: self.open_problem())
+    def create_ui(self):
 
-        # Open button
-        ttk.Button(root, text="Open", command=self.open_problem,
-                   style="TButton").pack(pady=15)
+        ttk.Label(
+            self.root,
+            text="CP Launcher",
+            font=("Segoe UI", 18, "bold"),
+            foreground="#89b4fa"
+        ).pack(pady=18)
 
-        # Status label
-        self.status = ttk.Label(root, text="", foreground="#fab387")
-        self.status.pack(pady=(0, 10))
+        # Input box
+        frame = ttk.Frame(self.root)
+        frame.pack(fill="x", padx=60)
 
-        # Remember last opened
-        self.last_url = None
+        self.entry = ttk.Entry(frame, justify="center")
+        self.entry.pack(fill="x", ipady=6)
 
-    def clear_placeholder(self, event):
-        if self.entry.get() == self.placeholder:
-            self.entry.delete(0, tk.END)
+        self.entry.insert(0, "CF 1985F")
+        self.entry.bind("<Return>", lambda e: self.open_any())
 
-    def restore_placeholder(self, event):
-        if not self.entry.get():
-            self.entry.insert(0, self.placeholder)
+        # Buttons
+        btn_frame = ttk.Frame(self.root)
+        btn_frame.pack(pady=20)
 
-    def open_problem(self):
-        s = self.entry.get().strip().upper()
-        if not s or s == self.placeholder.strip().upper():
-            self.status.config(text="Enter problem code", foreground="#f38ba8")
+        ttk.Button(
+            btn_frame,
+            text="Open Problem",
+            command=self.open_any
+        ).pack(pady=4)
+
+        ttk.Button(
+            btn_frame,
+            text="Link Account",
+            command=self.link_account_dialog
+        ).pack(pady=4)
+
+        ttk.Button(
+            btn_frame,
+            text="Open Profile",
+            command=self.open_profile
+        ).pack(pady=4)
+
+        self.status = ttk.Label(self.root, text="")
+        self.status.pack()
+
+    # ===============================
+    # Account Linking
+    # ===============================
+
+    def link_account_dialog(self):
+
+        platform = simpledialog.askstring(
+            "Platform",
+            "Enter platform (CF/LOJ/LC/CC/AT/HR/CSES)"
+        )
+
+        if not platform:
             return
 
-        # Normalize input: CF1985F → 1985 F    CF 1913-A → 1913 A
-        s = re.sub(r'[^0-9A-Z]', '', s)  # remove spaces, dashes, etc.
-        m = re.match(r'^CF?([0-9]+)([A-Z][A-Z]?)$', s)
+        username = simpledialog.askstring(
+            "Username",
+            "Enter username or ID"
+        )
 
-        if not m:
-            self.status.config(text="Invalid format • try 1985F", foreground="#f38ba8")
+        if not username:
             return
 
-        contest, letter = m.groups()
-        letter = letter.upper()
+        data = self.load_accounts()
+        data[platform.upper()] = username
+        self.save_accounts(data)
 
-        urls = [
-            f"https://codeforces.com/problemset/problem/{contest}/{letter}",
-            f"https://codeforces.com/contest/{contest}/problem/{letter}",
-            f"https://codeforces.com/gym/{contest}/problem/{letter}",
-        ]
+        messagebox.showinfo("Success", "Account Linked")
 
-        opened = False
-        for url in urls:
-            if url == self.last_url:
-                self.status.config(text="Already opened", foreground="#a6e3a1")
-                return
+    # ===============================
+    # Problem Opening
+    # ===============================
 
-            try:
-                webbrowser.open_new_tab(url)
-                self.last_url = url
-                self.status.config(text=f"Opened {contest}/{letter}", foreground="#a6e3a1")
-                opened = True
-                break
-            except:
-                continue
+    def open_any(self):
 
-        if not opened:
-            self.status.config(text="Couldn't open link", foreground="#f38ba8")
+        text = self.entry.get().strip()
+        parts = text.split(maxsplit=1)
 
+        if len(parts) < 2:
+            return
+
+        platform = parts[0].upper()
+        code = parts[1]
+
+        accounts = self.load_accounts()
+
+        url = None
+
+        if platform == "CF":
+            m = re.match(r"(\d+)([A-Za-z]+)", code)
+
+            if m:
+                contest, letter = m.groups()
+
+                handle = accounts.get("CF", "")
+
+                base = f"https://codeforces.com/problemset/problem/{contest}/{letter.upper()}"
+
+                url = base + (f"?handle={handle}" if handle else "")
+
+        elif platform == "LOJ":
+            url = f"https://lightoj.com/problem/{code}"
+
+        elif platform == "LC":
+            url = f"https://leetcode.com/problems/{code.lower().replace(' ', '-')}"
+
+        elif platform == "CC":
+            url = f"https://www.codechef.com/problems/{code.upper()}"
+
+        elif platform == "AT":
+            url = f"https://atcoder.jp/contests/{code.split('_')[0]}/tasks/{code.lower()}"
+
+        elif platform == "HR":
+            url = f"https://www.hackerrank.com/challenges/{code.lower().replace(' ', '-')}"
+
+        elif platform == "CSES":
+            if code.isdigit():
+                url = f"https://cses.fi/problemset/task/{code}"
+
+        if url:
+            webbrowser.open_new_tab(url)
+            self.status.config(text="Opened ✔", foreground="#a6e3a1")
+
+    # ===============================
+    # Profile Open
+    # ===============================
+
+    def open_profile(self):
+
+        platform = simpledialog.askstring(
+            "Profile",
+            "Platform?"
+        )
+
+        if not platform:
+            return
+
+        platform = platform.upper()
+
+        accounts = self.load_accounts()
+        username = accounts.get(platform)
+
+        if not username:
+            messagebox.showinfo("Info", "Account not linked")
+            return
+
+        urls = {
+            "CF": f"https://codeforces.com/profile/{username}",
+            "LOJ": f"https://lightoj.com/user/{username}",
+            "LC": f"https://leetcode.com/{username}",
+            "CC": f"https://www.codechef.com/users/{username}",
+            "AT": f"https://atcoder.jp/users/{username}",
+            "HR": f"https://www.hackerrank.com/{username}",
+            "CSES": f"https://cses.fi/user/{username}"
+        }
+
+        if platform in urls:
+            webbrowser.open_new_tab(urls[platform])
+
+
+# ===============================
+# MAIN
+# ===============================
 
 if __name__ == "__main__":
     root = tk.Tk()
-    app = CFOpenApp(root)
+    CPLauncher(root)
     root.mainloop()
