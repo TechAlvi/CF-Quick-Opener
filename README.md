@@ -16,42 +16,136 @@ Just pure coding focus.
 
 ## 🔥 Why CP Launcher?
 
-- 🧠 One-click problem setup
-- 📂 Automatic file structure generation
-- ⚙️ Pre-configured compiler integration
-- 🧩 Smart template injection
-- 🔗 Profile linking support
+- 🧠 One-click problem opening
+- 🔗 Multi-platform profile linking
+- 📊 Unified submissions dashboard
+- 🎯 Cross-OJ submission tracking
+- 📈 Live statistics & performance insights
+- 🎛 Verdict filtering system
+- 🔄 Auto-refresh support
 - 🚄 Extremely lightweight & fast
 - 🎯 Designed for serious competitive programmers
 
-Built to eliminate repetitive setup and maximize your problem-solving speed.
+Built to eliminate repetitive actions and maximize your problem-solving speed.
 
 ---
 
-## 🆕 Latest Update
+## 🌍 Supported Platforms
 
-### ✅ Added: Profile Linking
+- Codeforces  
+- AtCoder  
+- CSES  
+- LeetCode  
+- CodeChef  
+- HackerRank  
+- LightOJ  
 
-You can now link your competitive programming profiles directly inside CP Launcher.
+---
 
-- Connect your accounts
-- Keep your identity synced
-- Streamline your contest workflow
-- Build a more integrated coding environment
+## 🆕 Latest Major Update
 
-More features coming soon.
+### 🚀 Unified Submissions System
+
+CP Launcher now includes a **multi-OJ submission dashboard**.
+
+You can:
+
+- View submissions from multiple platforms
+- Select specific OJ or merge ALL
+- Filter by verdict (Accepted, WA, TLE, CE)
+- See most used language
+- Track acceptance rate
+- View submission timestamps
+- Auto-refresh every 60 seconds
+
+This transforms CP Launcher from a launcher into a lightweight competitive programming client.
+
+---
+
+### 📊 Live Stats Panel
+
+For any selected OJ (or ALL):
+
+- Total submissions
+- Accepted count
+- Success rate %
+- Most used programming language
+
+Instant performance visibility.
+
+---
+
+### 🎛 Advanced Verdict Filters
+
+Filter submissions by:
+
+- ALL
+- Accepted
+- Wrong Answer
+- Time Limit Exceeded
+- Compilation Error
+
+Clean table. Zero clutter. Pure data.
+
+---
+
+### 🆘 Built-in Help System
+
+New **Help button** included.
+
+Shows correct usage format:
+
+(OJ) (ProblemCode)
+
+Examples:
+
+CF 1985F  
+CSES 1068  
+AT abc300_a  
+LC two-sum  
+CC FLOW001  
+
+No guessing. No confusion.
+
+---
+
+### 🔗 Improved Profile Linking
+
+You can now:
+
+- Link multiple OJ accounts
+- Store handles locally
+- Open profiles instantly
+- Fetch submissions automatically
+
+Your competitive identity is fully integrated.
 
 ---
 
 ## 💎 Clean. Minimal. Professional.
 
 CP Launcher follows a modern, distraction-free design philosophy:
+
 - Minimal interface
 - Zero clutter
 - Fast response time
-- Productivity-first architecture
+- Unified data architecture
+- Productivity-first design
 
 It feels premium because it *is*.
+
+---
+
+## 🧠 Engineered For Competitive Programmers
+
+Designed for:
+
+- Codeforces grinders
+- ICPC aspirants
+- AtCoder specialists
+- Algorithm enthusiasts
+- Students preparing for contests
+- Developers who value speed
 
 ---
 
@@ -59,22 +153,14 @@ It feels premium because it *is*.
 
 CP Launcher is **NOT open source**.
 
-The internal architecture, optimization strategies, and workflow automation logic are proprietary.  
+The internal architecture, automation logic, and unified submission engine are proprietary.
+
 This ensures:
+
 - Better security
 - Controlled updates
 - High-quality maintenance
-- Unique competitive edge
-
----
-
-## 🛠 Built For
-
-- Codeforces grinders
-- ICPC aspirants
-- AtCoder warriors
-- Students preparing for contests
-- Developers who value speed
+- Unique competitive advantage
 
 ---
 
@@ -83,20 +169,31 @@ This ensures:
 > Every millisecond matters in competitive programming.
 
 CP Launcher is engineered to:
-- Reduce setup time to near zero
-- Maintain blazing execution speed
+
+- Reduce navigation time
+- Eliminate repetitive actions
+- Provide instant analytics
 - Stay stable under heavy usage
+- Deliver smooth UX with zero lag
 
 ---
 
 ## 🏁 Final Words
 
-If you're serious about competitive programming,  
-CP Launcher is not optional.
+CP Launcher is no longer just a problem opener.
 
-It's essential.
+It is now a:
+
+- Multi-platform submission tracker
+- Lightweight CP analytics client
+- Unified competitive dashboard
+
+If you're serious about competitive programming,
+
+CP Launcher isn’t optional.
+
+It’s essential.
 
 ---
 
-**Level up your workflow.  
-Launch smarter. Code faster. Win more.**
+**Launch smarter. Code faster. Win more.**
